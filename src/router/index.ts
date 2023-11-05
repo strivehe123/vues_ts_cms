@@ -1,3 +1,6 @@
+import { LOGIN_TOKEN } from '@/global/constants'
+import { localCache } from '@/utils/cache'
+import { firstMenu } from '@/utils/mapMenu'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
@@ -9,6 +12,7 @@ const router = createRouter({
     },
     {
       path: '/main',
+      name: 'main',
       component: () => import('@/views/main/index.vue')
     },
     {
@@ -20,5 +24,15 @@ const router = createRouter({
       component: () => import('@/views/not-found/index.vue')
     }
   ]
+})
+router.beforeEach((to, from) => {
+  const token = localCache.getCache(LOGIN_TOKEN)
+
+  if (to.path.startsWith('/main') && !token) {
+    return '/login'
+  }
+  if (to.path === '/main') {
+    return firstMenu?.url
+  }
 })
 export default router

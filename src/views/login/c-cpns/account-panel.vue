@@ -18,9 +18,10 @@
 import { reactive, ref } from 'vue'
 import type { FormRules, ElForm } from 'element-plus'
 import useLoginStore from '@/store/login'
+import { localCache } from '@/utils/cache'
 const accountForm = reactive({
-  name: '',
-  password: ''
+  name: localCache.getCache('login/name') ?? '',
+  password: localCache.getCache('login/pwd') ?? ''
 })
 const rules: FormRules = {
   name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -28,12 +29,20 @@ const rules: FormRules = {
 }
 const formRef = ref<InstanceType<typeof ElForm>>()
 const loginStore = useLoginStore()
-const accountLoginHandle = () => {
+const accountLoginHandle = (isRemberPassword = false) => {
   formRef.value?.validate((validated) => {
     if (validated) {
       const name = accountForm.name
       const password = accountForm.password
-      loginStore.loginAction({ name, password })
+      loginStore.loginAction({ name, password }).then((res) => {
+        if (isRemberPassword) {
+          localCache.setCache('login/name', name)
+          localCache.setCache('login/pwd', password)
+        } else {
+          localCache.removeCache('login/name')
+          localCache.removeCache('login/pwd')
+        }
+      })
     } else {
       ElMessage.error('Oops, this is a error message.')
     }

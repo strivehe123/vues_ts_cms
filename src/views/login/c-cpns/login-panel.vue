@@ -31,19 +31,22 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import AccountPanel from './account-panel.vue'
 import PhonePanel from './phone-panel.vue'
+import { localCache } from '@/utils/cache'
 const activeLogin = ref('account')
-const isRemberPassword = ref(false)
+const isRemberPassword = ref(localCache.getCache('isRemPwd') ?? false)
 const accountRef = ref<InstanceType<typeof AccountPanel>>()
 const handleLogin = () => {
-  // console.log(activeLogin.value)
   if (activeLogin.value === 'account') {
-    accountRef.value?.accountLoginHandle()
+    accountRef.value?.accountLoginHandle(isRemberPassword.value)
   } else {
   }
 }
+watch(isRemberPassword, (newValue) => {
+  localCache.setCache('isRemPwd', newValue)
+})
 </script>
 <style lang="less" scoped>
 .home {

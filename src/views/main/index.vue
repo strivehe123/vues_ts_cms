@@ -1,20 +1,51 @@
 <template>
   <div class="main">
-    <h2>main</h2>
-    <h2>{{ counterStore.sum }}-{{ counterStore.dounleSum }}</h2>
-    <el-row class="mb-4">
-      <el-button>Default</el-button>
-      <el-button type="primary">Primary</el-button>
-      <el-button type="success">Success</el-button>
-      <el-button type="info">Info</el-button>
-      <el-button type="warning">Warning</el-button>
-      <el-button type="danger">Danger</el-button>
-    </el-row>
+    <el-container>
+      <el-aside :width="isFold ? '58px' : '240px'">
+        <main-menu :is-fold="isFold" />
+      </el-aside>
+      <el-container>
+        <el-header>
+          <main-header @fold-change="handleFoldChange" />
+        </el-header>
+        <el-main><router-view /></el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 <script lang="ts" setup>
-import useCounterStore from '@/store/counter'
-import { getEntireRoles } from '@/service//module/main'
-const counterStore = useCounterStore()
+import { ref } from 'vue'
+import MainMenu from '@/components/main-menu/index.vue'
+import MainHeader from '@/components/main-header/index.vue'
+const isFold = ref(false)
+const handleFoldChange = (flag: boolean) => {
+  isFold.value = flag
+}
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.main {
+  height: 100%;
+  .el-container {
+    height: 100%;
+    .el-aside {
+      background-color: bisque;
+      overflow-x: hidden;
+      overflow-y: auto;
+      line-height: 200px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #001529;
+      transition: width 800 ease-in;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    .el-header {
+    }
+    .el-main {
+      background-color: #f0f2f5;
+    }
+  }
+}
+</style>
