@@ -34,7 +34,7 @@ const accountLoginHandle = (isRemberPassword = false) => {
     if (validated) {
       const name = accountForm.name
       const password = accountForm.password
-      loginStore.loginAction({ name, password }).then((res) => {
+      loginStore.loginAction({ name, password }).then(() => {
         if (isRemberPassword) {
           localCache.setCache('login/name', name)
           localCache.setCache('login/pwd', password)

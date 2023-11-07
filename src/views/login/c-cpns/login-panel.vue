@@ -41,7 +41,6 @@ const accountRef = ref<InstanceType<typeof AccountPanel>>()
 const handleLogin = () => {
   if (activeLogin.value === 'account') {
     accountRef.value?.accountLoginHandle(isRemberPassword.value)
-  } else {
   }
 }
 watch(isRemberPassword, (newValue) => {

@@ -25,7 +25,7 @@ const router = createRouter({
     }
   ]
 })
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   const token = localCache.getCache(LOGIN_TOKEN)
 
   if (to.path.startsWith('/main') && !token) {

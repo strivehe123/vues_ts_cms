@@ -1,5 +1,3 @@
-import type { url } from 'inspector'
-import type { url } from 'inspector'
 import type { RouteRecordRaw } from 'vue-router'
 
 function loadLocalRoutes() {
@@ -64,4 +62,44 @@ export function mapPathToBreadcrumb(path: string, menuData: IMenu[]) {
     }
   }
   return breadcrumbs
+}
+
+/**
+ * 把menuList 中的id 获取
+ * @param menuList
+ * @returns
+ */
+export function mapMenuListToIds(menuList: any[]) {
+  const ids: number[] = []
+  function reduceGetIds(menus: any[]) {
+    for (const item of menus) {
+      if (item.children) {
+        reduceGetIds(item.children)
+      } else {
+        ids.push(item.id)
+      }
+    }
+  }
+  reduceGetIds(menuList)
+  return ids
+}
+
+/**
+ * 从菜单映射到按钮的权限
+ * @param menuList 菜单列表
+ * @returns 权限列表
+ */
+export function mapMenusToPermissions(menuList: any[]) {
+  const permissions: string[] = []
+  function recurseGetPermissionString(menu: any[]) {
+    for (const item of menu) {
+      if (item.type !== 3) {
+        recurseGetPermissionString(item.children ?? [])
+      } else {
+        permissions.push(item.permission)
+      }
+    }
+  }
+  recurseGetPermissionString(menuList)
+  return permissions
 }
